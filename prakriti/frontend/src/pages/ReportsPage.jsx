@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useApi } from '../hooks/useApi.js'
 import { getReports, submitReport } from '../services/api.js'
 import {
@@ -81,27 +81,29 @@ export default function ReportsPage() {
     return true
   })
 
+  const inputCls = 'w-full bg-[#12263A] border border-slate-800 rounded-lg px-3 py-2 text-sm text-slate-200 placeholder-slate-600 focus:outline-none focus:border-blue-500/50 focus:ring-2 focus:ring-blue-500/10 transition-all duration-150'
+
   return (
-    <div className="h-full overflow-y-auto p-4 space-y-4">
+    <div className="h-full overflow-y-auto bg-[#07111F] p-4 space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <h1 className="text-base font-bold text-white">Incident Reports</h1>
+          <h1 className="text-base font-bold text-slate-50 tracking-tight">Incident Reports</h1>
           <DemoBadge />
         </div>
         <button
           onClick={() => setShowForm(s => !s)}
-          className="flex items-center gap-2 px-3 py-2 bg-blue-700 hover:bg-blue-600 text-white rounded-lg text-sm transition-colors"
+          className="flex items-center gap-2 px-3 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-lg text-sm transition-all duration-150 font-medium shadow-sm"
         >
           <FileText size={14} /> Submit Report
         </button>
       </div>
 
       {submitResult && (
-        <div className={`p-3 rounded-lg border text-sm flex items-center gap-2 ${submitResult.success ? 'bg-green-900/30 border-green-700 text-green-300' : 'bg-red-900/30 border-red-700 text-red-300'}`}>
-          {submitResult.success ? <CheckCircle size={16} /> : <XCircle size={16} />}
+        <div className={`alert-toast animate-fade-in ${submitResult.success ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-300' : 'bg-red-500/10 border-red-500/20 text-red-300'}`}>
+          {submitResult.success ? <CheckCircle size={16} className="flex-shrink-0 mt-0.5" /> : <XCircle size={16} className="flex-shrink-0 mt-0.5" />}
           <div>
-            <div className="font-medium">{submitResult.success ? 'Report Submitted' : 'Error'}</div>
-            <div className="text-xs opacity-80">{submitResult.message}</div>
+            <div className="font-semibold text-sm">{submitResult.success ? 'Report Submitted' : 'Error'}</div>
+            <div className="text-xs opacity-80 mt-0.5">{submitResult.message}</div>
             {submitResult.success && submitResult.contradictions_found > 0 && (
               <div className="text-xs text-yellow-400 mt-1">⚠ {submitResult.contradictions_found} contradiction(s) detected!</div>
             )}
@@ -114,26 +116,26 @@ export default function ReportsPage() {
 
       {/* Submit form */}
       {showForm && (
-        <div className="bg-gray-900/80 border border-gray-700 rounded-lg p-4">
-          <h3 className="font-semibold text-sm text-white mb-4">Submit Incident Report</h3>
+        <div className="bg-[#12263A]/90 backdrop-blur-md border border-[#243B53] rounded-xl p-5 shadow-panel animate-fade-in">
+          <h3 className="font-semibold text-sm text-slate-100 mb-4">Submit Incident Report</h3>
           <form onSubmit={handleSubmit} className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-gray-400 mb-1">Village *</label>
+                <label className="block text-xs text-slate-400 mb-1.5 font-medium">Village *</label>
                 <select
                   value={form.village_id}
                   onChange={e => setForm(f => ({ ...f, village_id: e.target.value }))}
-                  className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
+                  className={inputCls}
                 >
                   {VILLAGE_IDS.map(v => <option key={v.id} value={v.id}>{v.name}</option>)}
                 </select>
               </div>
               <div>
-                <label className="block text-xs text-gray-400 mb-1">Source Type</label>
+                <label className="block text-xs text-slate-400 mb-1.5 font-medium">Source Type</label>
                 <select
                   value={form.source_type}
                   onChange={e => setForm(f => ({ ...f, source_type: e.target.value }))}
-                  className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
+                  className={inputCls}
                 >
                   {SOURCE_OPTIONS.map(s => <option key={s} value={s}>{SOURCE_LABELS[s]?.label || s}</option>)}
                 </select>
@@ -142,20 +144,20 @@ export default function ReportsPage() {
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-gray-400 mb-1">Reporter Name</label>
+                <label className="block text-xs text-slate-400 mb-1.5 font-medium">Reporter Name</label>
                 <input
                   value={form.reporter_name}
                   onChange={e => setForm(f => ({ ...f, reporter_name: e.target.value }))}
                   placeholder="Anonymous"
-                  className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-blue-500"
+                  className={inputCls}
                 />
               </div>
               <div>
-                <label className="block text-xs text-gray-400 mb-1">Severity</label>
+                <label className="block text-xs text-slate-400 mb-1.5 font-medium">Severity</label>
                 <select
                   value={form.severity}
                   onChange={e => setForm(f => ({ ...f, severity: e.target.value }))}
-                  className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
+                  className={inputCls}
                 >
                   {SEVERITY_OPTIONS.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
@@ -163,13 +165,17 @@ export default function ReportsPage() {
             </div>
 
             <div>
-              <label className="block text-xs text-gray-400 mb-1">Disaster Types</label>
-              <div className="flex flex-wrap gap-2">
+              <label className="block text-xs text-slate-400 mb-1.5 font-medium">Disaster Types</label>
+              <div className="flex flex-wrap gap-1.5">
                 {DISASTER_OPTIONS.map(d => (
                   <button
                     key={d} type="button"
                     onClick={() => toggleDisasterType(d)}
-                    className={`text-xs px-2 py-1 rounded border transition-colors ${form.disaster_types.includes(d) ? 'bg-blue-700 border-blue-600 text-white' : 'bg-gray-800 border-gray-700 text-gray-400 hover:border-gray-500'}`}
+                    className={`text-xs px-2.5 py-1 rounded-full border transition-all duration-150 ${
+                      form.disaster_types.includes(d)
+                        ? 'bg-blue-600/20 border-blue-500/50 text-blue-300'
+                        : 'bg-slate-800/60 border-slate-700 text-slate-400 hover:border-slate-500 hover:text-slate-300'
+                    }`}
                   >
                     {DISASTER_LABELS[d]}
                   </button>
@@ -178,57 +184,57 @@ export default function ReportsPage() {
             </div>
 
             <div>
-              <label className="block text-xs text-gray-400 mb-1">Description *</label>
+              <label className="block text-xs text-slate-400 mb-1.5 font-medium">Description *</label>
               <textarea
                 required
                 value={form.description}
                 onChange={e => setForm(f => ({ ...f, description: e.target.value }))}
                 placeholder="Describe the situation in detail..."
                 rows={3}
-                className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 resize-none"
+                className={`${inputCls} resize-none`}
               />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs text-gray-400 mb-1">People Affected</label>
+                <label className="block text-xs text-slate-400 mb-1.5 font-medium">People Affected</label>
                 <input
                   type="number" min="0"
                   value={form.people_affected}
                   onChange={e => setForm(f => ({ ...f, people_affected: parseInt(e.target.value) || 0 }))}
-                  className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-sm text-white focus:outline-none focus:border-blue-500"
+                  className={inputCls}
                 />
               </div>
               <div>
-                <label className="block text-xs text-gray-400 mb-1">Urgency (1-5)</label>
+                <label className="block text-xs text-slate-400 mb-1.5 font-medium">Urgency (1-5)</label>
                 <input
                   type="range" min="1" max="5"
                   value={form.urgency}
                   onChange={e => setForm(f => ({ ...f, urgency: parseInt(e.target.value) }))}
                   className="w-full accent-red-500 mt-2"
                 />
-                <div className="text-xs text-gray-500 text-center">{form.urgency}/5</div>
+                <div className="text-xs text-slate-500 text-center">{form.urgency}/5</div>
               </div>
             </div>
 
             <div>
-              <label className="block text-xs text-gray-400 mb-1">Attach Image (optional)</label>
+              <label className="block text-xs text-slate-400 mb-1.5 font-medium">Attach Image (optional)</label>
               <input
                 type="file" accept="image/*"
                 onChange={e => setImageFile(e.target.files[0])}
-                className="text-xs text-gray-400 file:mr-3 file:py-1 file:px-3 file:rounded file:border file:border-gray-600 file:bg-gray-800 file:text-gray-300 hover:file:bg-gray-700"
+                className="text-xs text-slate-400 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border file:border-slate-600 file:bg-slate-800 file:text-slate-300 hover:file:bg-slate-700 file:transition-colors file:duration-150"
               />
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-3 pt-1">
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex items-center gap-2 px-4 py-2 bg-blue-700 hover:bg-blue-600 disabled:bg-gray-700 text-white rounded text-sm transition-colors"
+                className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-500 disabled:bg-slate-700 text-white rounded-lg text-sm transition-all duration-150 font-medium"
               >
                 <Send size={14} /> {submitting ? 'Submitting...' : 'Submit Report'}
               </button>
-              <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-gray-300 rounded text-sm">
+              <button type="button" onClick={() => setShowForm(false)} className="px-4 py-2 bg-slate-700/60 hover:bg-slate-700 text-slate-300 rounded-lg text-sm transition-colors duration-150">
                 Cancel
               </button>
             </div>
@@ -239,17 +245,17 @@ export default function ReportsPage() {
       {/* Filters */}
       <div className="flex items-center gap-3 text-xs">
         <select value={filterSource} onChange={e => setFilterSource(e.target.value)}
-          className="bg-gray-800 border border-gray-700 rounded px-2 py-1 text-gray-300">
+          className="bg-[#12263A] border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-300 focus:outline-none focus:border-blue-500/50 transition-colors">
           <option value="all">All Sources</option>
           {SOURCE_OPTIONS.map(s => <option key={s} value={s}>{SOURCE_LABELS[s]?.label}</option>)}
         </select>
         <select value={filterVerified} onChange={e => setFilterVerified(e.target.value)}
-          className="bg-gray-800 border border-gray-700 rounded px-2 py-1 text-gray-300">
+          className="bg-[#12263A] border border-slate-800 rounded-lg px-2.5 py-1.5 text-slate-300 focus:outline-none focus:border-blue-500/50 transition-colors">
           <option value="all">All Reports</option>
           <option value="verified">Verified Only</option>
           <option value="unverified">Unverified Only</option>
         </select>
-        <span className="text-gray-500">{filtered.length} reports</span>
+        <span className="text-slate-500">{filtered.length} reports</span>
       </div>
 
       {/* Report list */}
@@ -259,20 +265,20 @@ export default function ReportsPage() {
             const src = SOURCE_LABELS[r.source_type] || SOURCE_LABELS.unknown
             const relColor = r.reliability_score >= 70 ? 'text-green-400' : r.reliability_score >= 45 ? 'text-yellow-400' : 'text-red-400'
             return (
-              <div key={r.id} className={`bg-gray-900/60 border rounded-lg p-3 ${r.is_duplicate ? 'border-orange-800/50 opacity-60' : 'border-gray-800'}`}>
+              <div key={r.id} className={`bg-[#12263A]/70 border rounded-xl p-3.5 transition-all duration-200 hover:border-slate-700/60 hover:bg-[#12263A] data-row ${r.is_duplicate ? 'border-amber-500/20 opacity-60' : 'border-slate-800/50'}`}>
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                    <div className="flex items-center gap-2 flex-wrap mb-1.5">
                       <span className={`text-xs font-medium ${src.color}`}>{src.icon} {src.label}</span>
                       <SeverityBadge severity={r.severity} />
-                      {r.is_verified && <span className="text-xs text-green-400 border border-green-700/50 rounded px-1.5 py-0.5">✓ Verified</span>}
-                      {r.is_duplicate && <span className="text-xs text-orange-400 border border-orange-700/50 rounded px-1.5 py-0.5">⚠ Duplicate</span>}
+                      {r.is_verified && <span className="text-xs text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-2 py-0.5 font-medium">✓ Verified</span>}
+                      {r.is_duplicate && <span className="text-xs text-amber-400 bg-amber-500/10 border border-amber-500/20 rounded-full px-2 py-0.5">⚠ Duplicate</span>}
                       {r.disaster_types?.map(d => (
-                        <span key={d} className="text-xs text-gray-500 bg-gray-800 border border-gray-700 rounded px-1.5 py-0.5">{DISASTER_LABELS[d] || d}</span>
+                        <span key={d} className="text-xs text-slate-500 bg-slate-800/60 border border-slate-700/60 rounded-full px-2 py-0.5">{DISASTER_LABELS[d] || d}</span>
                       ))}
                     </div>
-                    <p className="text-sm text-gray-300 mb-1">{r.description}</p>
-                    <div className="flex items-center gap-3 text-xs text-gray-600">
+                    <p className="text-sm text-slate-300 mb-1.5">{r.description}</p>
+                    <div className="flex items-center gap-3 text-xs text-slate-600">
                       <span>👤 {r.reporter_name}</span>
                       {r.people_affected > 0 && <span>👥 {r.people_affected?.toLocaleString()} affected</span>}
                       <span>Urgency: {r.urgency}/5</span>
@@ -281,7 +287,7 @@ export default function ReportsPage() {
                   </div>
                   <div className="text-right flex-shrink-0">
                     <div className={`text-sm font-bold ${relColor}`}>{r.reliability_score?.toFixed(0)}%</div>
-                    <div className="text-[10px] text-gray-600">Reliability</div>
+                    <div className="text-[10px] text-slate-600">Reliability</div>
                   </div>
                 </div>
               </div>

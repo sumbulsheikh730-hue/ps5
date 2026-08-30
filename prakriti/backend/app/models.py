@@ -188,3 +188,40 @@ class SimulationState(Base):
     scenario_name = Column(String, default="")
     started_at = Column(DateTime, nullable=True)
     completed_at = Column(DateTime, nullable=True)
+
+
+class HITLRecommendation(Base):
+    """
+    Human-in-the-Loop recommendation record.
+    AI produces a recommendation for each high-priority village; an officer then
+    approves, rejects, or requests reassessment before the action is executed.
+    """
+    __tablename__ = "hitl_recommendations"
+
+    id = Column(String, primary_key=True, default=gen_id)
+    village_id = Column(String, ForeignKey("villages.id"), nullable=False)
+
+    # --- AI output (filled on creation / reassessment) ---
+    ai_action = Column(String)            # e.g. "Deploy Boat-1 to Rampur"
+    ai_reasoning = Column(JSON, default=list)   # list of strings (from priority explanation)
+    priority_class = Column(String, default="P4")
+    priority_score = Column(Float, default=0.0)
+    recommended_resources = Column(JSON, default=list)  # [{"id":…, "name":…, "type":…}]
+    fog_score = Column(Float, default=0.0)
+    confidence_score = Column(Float, default=0.0)
+    people_at_risk = Column(Integer, default=0)
+    disaster_types = Column(JSON, default=list)
+
+    # --- Officer decision ---
+    status = Column(String, default="pending")  # pending | approved | rejected | reassessing
+    officer_name = Column(String, nullable=True)
+    officer_note = Column(Text, nullable=True)
+    decided_at = Column(DateTime, nullable=True)
+
+    # --- Audit trail ---
+    reassessment_count = Column(Integer, default=0)
+    is_demo = Column(Boolean, default=True)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    village = relationship("Village")

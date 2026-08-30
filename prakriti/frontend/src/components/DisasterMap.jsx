@@ -37,7 +37,8 @@ function VillageMarker({ village, onClick }) {
           </div>
           <button
             onClick={() => onClick(village)}
-            className="mt-2 w-full text-xs bg-blue-700 hover:bg-blue-600 text-white px-2 py-1 rounded"
+            className="mt-2 w-full text-xs px-2 py-1 rounded-md transition-colors duration-150"
+            style={{ background: 'rgba(0,212,255,0.15)', border: '1px solid rgba(0,212,255,0.30)', color: '#00D4FF' }}
           >
             View Details
           </button>
@@ -82,16 +83,26 @@ export default function DisasterMap({ fullscreen = false }) {
   const mapH = fullscreen ? 'h-full' : 'h-[560px]'
 
   return (
-    <div className={`relative w-full ${mapH} rounded-lg overflow-hidden border border-gray-800`}>
+    <div
+      className={`relative w-full ${mapH} rounded-xl overflow-hidden`}
+      style={{ border: '1px solid #243B53' }}
+    >
       {/* Map controls */}
       <div className="absolute top-3 left-3 z-[1000] flex flex-col gap-2">
-        <div className="bg-gray-900/95 border border-gray-700 rounded-lg p-2 text-xs space-y-1">
-          <div className="font-semibold text-gray-300 mb-2">Severity Filter</div>
+        <div
+          className="rounded-xl p-2 text-xs space-y-1"
+          style={{ background: 'rgba(13,27,42,0.97)', border: '1px solid #243B53' }}
+        >
+          <div className="font-semibold mb-2" style={{ color: '#94A3B8' }}>Severity Filter</div>
           {['all', 'critical', 'high', 'moderate', 'low'].map(s => (
             <button
               key={s}
               onClick={() => setFilterSeverity(s)}
-              className={`block w-full text-left px-2 py-1 rounded transition-colors ${filterSeverity === s ? 'bg-blue-700 text-white' : 'text-gray-400 hover:bg-gray-800'}`}
+              className="block w-full text-left px-2 py-1 rounded transition-all duration-150"
+              style={filterSeverity === s
+                ? { background: 'rgba(0,212,255,0.15)', color: '#00D4FF', borderLeft: '2px solid #00D4FF' }
+                : { color: '#64748B' }
+              }
             >
               {s === 'all' ? 'All' : SEVERITY_CONFIG[s].label}
             </button>
@@ -99,33 +110,40 @@ export default function DisasterMap({ fullscreen = false }) {
         </div>
         <button
           onClick={() => setShowRoads(r => !r)}
-          className={`px-3 py-1.5 rounded text-xs border transition-colors ${showRoads ? 'bg-blue-900/60 border-blue-700 text-blue-300' : 'bg-gray-900/95 border-gray-700 text-gray-400'}`}
+          className="px-3 py-1.5 rounded-lg text-xs transition-all duration-150"
+          style={showRoads
+            ? { background: 'rgba(0,212,255,0.10)', border: '1px solid rgba(0,212,255,0.30)', color: '#00D4FF' }
+            : { background: 'rgba(13,27,42,0.97)', border: '1px solid #243B53', color: '#64748B' }
+          }
         >
           {showRoads ? '🛣 Roads ON' : '🛣 Roads OFF'}
         </button>
       </div>
 
       {/* Legend */}
-      <div className="absolute bottom-3 left-3 z-[1000] bg-gray-900/95 border border-gray-700 rounded-lg p-2 text-xs space-y-1">
-        <div className="font-semibold text-gray-300 mb-1">Legend</div>
+      <div
+        className="absolute bottom-3 left-3 z-[1000] rounded-xl p-2 text-xs space-y-1"
+        style={{ background: 'rgba(13,27,42,0.97)', border: '1px solid #243B53' }}
+      >
+        <div className="font-semibold mb-1" style={{ color: '#94A3B8' }}>Legend</div>
         {Object.entries(SEVERITY_CONFIG).filter(([k]) => k !== 'unknown').map(([k, v]) => (
           <div key={k} className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full" style={{ backgroundColor: v.hex }} />
-            <span className="text-gray-400">{v.label}</span>
+            <span style={{ color: '#64748B' }}>{v.label}</span>
           </div>
         ))}
-        <div className="border-t border-gray-700 mt-1 pt-1 space-y-1">
+        <div className="mt-1 pt-1 space-y-1" style={{ borderTop: '1px solid #243B53' }}>
           {Object.entries(ROAD_COLORS).map(([k, v]) => (
             <div key={k} className="flex items-center gap-2">
               <div className="w-5 h-1 rounded" style={{ backgroundColor: v }} />
-              <span className="text-gray-400 capitalize">{k}</span>
+              <span className="capitalize" style={{ color: '#64748B' }}>{k}</span>
             </div>
           ))}
         </div>
       </div>
 
       {vLoading && (
-        <div className="absolute inset-0 z-[999] flex items-center justify-center bg-gray-900/50">
+        <div className="absolute inset-0 z-[999] flex items-center justify-center" style={{ background: 'rgba(7,17,31,0.6)' }}>
           <LoadingSpinner text="Loading map data..." />
         </div>
       )}
@@ -172,14 +190,22 @@ export default function DisasterMap({ fullscreen = false }) {
 
       {/* Side panel */}
       {selected && (
-        <div className="absolute top-0 right-0 h-full w-80 bg-gray-950/98 border-l border-gray-700 z-[1001] flex flex-col overflow-hidden">
-          <div className="flex items-center justify-between p-3 border-b border-gray-800">
+        <div
+          className="absolute top-0 right-0 h-full w-80 z-[1001] flex flex-col overflow-hidden"
+          style={{ background: '#0D1B2A', borderLeft: '1px solid #243B53' }}
+        >
+          <div className="flex items-center justify-between p-3" style={{ borderBottom: '1px solid #243B53' }}>
             <div>
-              <div className="font-bold text-white">{selected.name}</div>
-              <div className="text-xs text-gray-500">{selected.block} Block · {selected.district}</div>
+              <div className="font-bold" style={{ color: '#F1F5F9' }}>{selected.name}</div>
+              <div className="text-xs" style={{ color: '#64748B' }}>{selected.block} Block · {selected.district}</div>
             </div>
-            <button onClick={() => { setSelected(null); setDetailData(null); setWhyFirst(null) }}
-              className="text-gray-500 hover:text-white p-1">
+            <button
+              onClick={() => { setSelected(null); setDetailData(null); setWhyFirst(null) }}
+              className="p-1 rounded transition-colors duration-150"
+              style={{ color: '#4A5568' }}
+              onMouseEnter={e => e.currentTarget.style.color = '#F1F5F9'}
+              onMouseLeave={e => e.currentTarget.style.color = '#4A5568'}
+            >
               <X size={16} />
             </button>
           </div>
@@ -197,9 +223,13 @@ export default function DisasterMap({ fullscreen = false }) {
                 </div>
 
                 {/* Disaster types */}
-                <div className="text-xs text-gray-400 flex flex-wrap gap-1">
+                <div className="text-xs flex flex-wrap gap-1">
                   {(detailData.disaster_types || []).map(d => (
-                    <span key={d} className="bg-gray-800 border border-gray-700 px-2 py-0.5 rounded">
+                    <span
+                      key={d}
+                      className="px-2 py-0.5 rounded-full"
+                      style={{ background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.20)', color: '#94A3B8' }}
+                    >
                       {DISASTER_LABELS[d] || d}
                     </span>
                   ))}
@@ -208,14 +238,17 @@ export default function DisasterMap({ fullscreen = false }) {
                 {/* Key numbers */}
                 <div className="grid grid-cols-2 gap-2">
                   {[
-                    { label: 'Population', val: selected.population?.toLocaleString() },
-                    { label: 'At Risk', val: detailData.people_at_risk?.toLocaleString(), red: true },
-                    { label: 'Stranded', val: detailData.people_stranded?.toLocaleString() },
+                    { label: 'Population',    val: selected.population?.toLocaleString() },
+                    { label: 'At Risk',       val: detailData.people_at_risk?.toLocaleString(), red: true },
+                    { label: 'Stranded',      val: detailData.people_stranded?.toLocaleString() },
                     { label: 'Medical Emerg.', val: detailData.medical_emergencies, red: detailData.medical_emergencies > 0 },
                   ].map(item => (
-                    <div key={item.label} className="bg-gray-900 rounded p-2">
-                      <div className="text-[10px] text-gray-500">{item.label}</div>
-                      <div className={`text-sm font-bold ${item.red ? 'text-red-400' : 'text-gray-200'}`}>{item.val ?? '—'}</div>
+                    <div key={item.label} className="rounded-lg p-2" style={{ background: '#12263A', border: '1px solid #243B53' }}>
+                      <div className="text-[10px] mb-0.5" style={{ color: '#4A5568' }}>{item.label}</div>
+                      <div
+                        className="text-sm font-bold"
+                        style={{ color: item.red ? '#FF3B30' : '#F1F5F9' }}
+                      >{item.val ?? '—'}</div>
                     </div>
                   ))}
                 </div>
@@ -226,22 +259,29 @@ export default function DisasterMap({ fullscreen = false }) {
 
                 {/* Communication */}
                 {!detailData.has_communication && (
-                  <div className="bg-red-900/30 border border-red-700/50 rounded p-2 text-xs text-red-300">
+                  <div
+                    className="rounded-lg p-2 text-xs"
+                    style={{ background: 'rgba(255,59,48,0.08)', border: '1px solid rgba(255,59,48,0.25)', color: '#FF3B30' }}
+                  >
                     ⚠ COMMUNICATION BLACKOUT – No recent contact
                   </div>
                 )}
 
                 {/* Last update */}
-                <div className="text-xs text-gray-500">
+                <div className="text-xs" style={{ color: '#4A5568' }}>
                   Last report: {detailData.last_report_time ? timeAgo(detailData.last_report_time) : 'Unknown'}
                 </div>
 
                 {/* Assigned resources */}
                 {detailData.assigned_resources?.length > 0 && (
                   <div className="text-xs">
-                    <div className="text-gray-500 mb-1">Assigned Resources:</div>
+                    <div className="mb-1" style={{ color: '#4A5568' }}>Assigned Resources:</div>
                     {detailData.assigned_resources.map(r => (
-                      <span key={r} className="inline-block bg-green-900/40 border border-green-700/50 text-green-300 px-2 py-0.5 rounded mr-1 mb-1">{r}</span>
+                      <span
+                        key={r}
+                        className="inline-block px-2 py-0.5 rounded-full mr-1 mb-1"
+                        style={{ background: 'rgba(48,209,88,0.10)', border: '1px solid rgba(48,209,88,0.25)', color: '#30D158' }}
+                      >{r}</span>
                     ))}
                   </div>
                 )}
@@ -249,17 +289,23 @@ export default function DisasterMap({ fullscreen = false }) {
                 {/* WHY FIRST button */}
                 <button
                   onClick={() => handleWhyFirst(selected.id)}
-                  className="w-full py-2 text-xs bg-blue-800/60 hover:bg-blue-700/60 border border-blue-600/60 text-blue-300 rounded flex items-center justify-center gap-2 transition-colors"
+                  className="w-full py-2 text-xs rounded-lg flex items-center justify-center gap-2 transition-all duration-150"
+                  style={{ background: 'rgba(0,212,255,0.08)', border: '1px solid rgba(0,212,255,0.25)', color: '#00D4FF' }}
+                  onMouseEnter={e => e.currentTarget.style.background = 'rgba(0,212,255,0.15)'}
+                  onMouseLeave={e => e.currentTarget.style.background = 'rgba(0,212,255,0.08)'}
                 >
                   <HelpCircle size={14} /> WHY THIS VILLAGE FIRST?
                 </button>
 
                 {whyFirst && (
-                  <div className="bg-gray-900 border border-blue-700/40 rounded p-3 text-xs space-y-2">
-                    <div className="font-bold text-blue-300">AI Priority Explanation</div>
-                    <div className="text-gray-300 italic">"{whyFirst.ai_statement}"</div>
-                    <div className="text-gray-400 font-semibold mt-2">Ranked #{whyFirst.priority_rank} of all villages</div>
-                    <ol className="space-y-1 text-gray-400 list-decimal list-inside">
+                  <div
+                    className="rounded-lg p-3 text-xs space-y-2"
+                    style={{ background: '#12263A', border: '1px solid rgba(0,212,255,0.20)' }}
+                  >
+                    <div className="font-bold" style={{ color: '#00D4FF' }}>AI Priority Explanation</div>
+                    <div className="italic" style={{ color: '#F1F5F9' }}>"{whyFirst.ai_statement}"</div>
+                    <div className="font-semibold mt-2" style={{ color: '#94A3B8' }}>Ranked #{whyFirst.priority_rank} of all villages</div>
+                    <ol className="space-y-1 list-decimal list-inside" style={{ color: '#94A3B8' }}>
                       {(whyFirst.explanation || []).map((e, i) => (
                         <li key={i}>{e}</li>
                       ))}
@@ -270,12 +316,12 @@ export default function DisasterMap({ fullscreen = false }) {
                 {/* Timeline */}
                 {detailData.timeline?.length > 0 && (
                   <div>
-                    <div className="text-xs font-semibold text-gray-400 mb-2">Incident Timeline</div>
+                    <div className="text-xs font-semibold mb-2" style={{ color: '#94A3B8' }}>Incident Timeline</div>
                     <div className="space-y-1">
                       {detailData.timeline.slice(0, 6).map((t, i) => (
                         <div key={i} className="flex gap-2 text-xs">
-                          <span className="text-gray-600 flex-shrink-0">{formatDateTime(t.time)}</span>
-                          <span className="text-gray-400">{t.event}</span>
+                          <span className="flex-shrink-0" style={{ color: '#4A5568' }}>{formatDateTime(t.time)}</span>
+                          <span style={{ color: '#94A3B8' }}>{t.event}</span>
                         </div>
                       ))}
                     </div>

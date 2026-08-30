@@ -11,6 +11,7 @@ from app.api import reports
 from app.api import resources
 from app.api import ai_analysis
 from app.api import simulation
+from app.api import hitl
 import os
 
 
@@ -52,6 +53,7 @@ app.include_router(resources.router)
 app.include_router(resources.route_router)
 app.include_router(ai_analysis.router)
 app.include_router(simulation.router)
+app.include_router(hitl.router)
 
 
 @app.get("/")

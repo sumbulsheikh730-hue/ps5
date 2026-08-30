@@ -1,10 +1,11 @@
 import { SEVERITY_CONFIG, PRIORITY_CONFIG, fogColor, fogBg } from '../utils/helpers.js'
+import { AlertCircle } from 'lucide-react'
 
 export function SeverityBadge({ severity, size = 'sm' }) {
   const cfg = SEVERITY_CONFIG[severity] || SEVERITY_CONFIG.unknown
-  const sz = size === 'sm' ? 'text-xs px-2 py-0.5' : 'text-sm px-2.5 py-1'
+  const sz = size === 'sm' ? 'text-xs px-2.5 py-0.5' : 'text-sm px-3 py-1'
   return (
-    <span className={`rounded-full font-medium ${sz} ${cfg.bg} ${cfg.color} border ${cfg.border}`}>
+    <span className={`inline-flex items-center rounded-full font-semibold ${sz} ${cfg.bg} ${cfg.color} border ${cfg.border}`}>
       {cfg.label}
     </span>
   )
@@ -13,7 +14,7 @@ export function SeverityBadge({ severity, size = 'sm' }) {
 export function PriorityBadge({ pclass }) {
   const cfg = PRIORITY_CONFIG[pclass] || PRIORITY_CONFIG.P4
   return (
-    <span className={`rounded px-2 py-0.5 text-xs font-bold border ${cfg.bg} ${cfg.color} ${cfg.border}`}>
+    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-bold border ${cfg.bg} ${cfg.color} ${cfg.border}`}>
       {cfg.label}
     </span>
   )
@@ -24,11 +25,11 @@ export function FogBar({ score, showLabel = true }) {
     <div className="w-full">
       {showLabel && (
         <div className="flex justify-between text-xs mb-1">
-          <span className="text-gray-400">Information Fog</span>
+          <span className="text-[#94A3B8] font-medium uppercase tracking-wider">Information Fog</span>
           <span className={`font-bold ${fogColor(score)}`}>{score?.toFixed(0)}%</span>
         </div>
       )}
-      <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
+      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(36,59,83,0.6)' }}>
         <div
           className={`h-full rounded-full fog-bar ${fogBg(score)}`}
           style={{ width: `${score}%` }}
@@ -44,67 +45,82 @@ export function FogBar({ score, showLabel = true }) {
 }
 
 export function ConfidenceBar({ score }) {
-  const color = score >= 75 ? 'bg-green-500' : score >= 50 ? 'bg-yellow-500' : 'bg-red-500'
-  const textColor = score >= 75 ? 'text-green-400' : score >= 50 ? 'text-yellow-400' : 'text-red-400'
+  // Uses PRAKRITI confidence color (#00D4FF cyan) at high confidence
+  const barColor  = score >= 75 ? 'bg-[#00BFA6]'  : score >= 50 ? 'bg-[#FFD60A]' : 'bg-[#FF3B30]'
+  const textColor = score >= 75 ? 'text-[#00BFA6]' : score >= 50 ? 'text-[#FFE234]' : 'text-[#FF6B63]'
   return (
     <div className="w-full">
       <div className="flex justify-between text-xs mb-1">
-        <span className="text-gray-400">Evidence Confidence</span>
+        <span className="text-[#94A3B8] font-medium uppercase tracking-wider">Evidence Confidence</span>
         <span className={`font-bold ${textColor}`}>{score?.toFixed(0)}%</span>
       </div>
-      <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
-        <div className={`h-full rounded-full transition-all duration-700 ${color}`} style={{ width: `${score}%` }} />
+      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(36,59,83,0.6)' }}>
+        <div className={`h-full rounded-full progress-bar ${barColor}`} style={{ width: `${score}%` }} />
       </div>
     </div>
   )
 }
 
 export function AccessibilityBar({ score }) {
-  const color = score >= 60 ? 'bg-green-500' : score >= 35 ? 'bg-yellow-500' : 'bg-red-500'
-  const textColor = score >= 60 ? 'text-green-400' : score >= 35 ? 'text-yellow-400' : 'text-red-400'
-  const label = score >= 70 ? 'Accessible' : score >= 40 ? 'Limited' : score >= 20 ? 'Difficult' : 'Isolated'
+  const barColor  = score >= 60 ? 'bg-[#30D158]'  : score >= 35 ? 'bg-[#FFD60A]' : 'bg-[#FF3B30]'
+  const textColor = score >= 60 ? 'text-[#5EE47C]' : score >= 35 ? 'text-[#FFE234]' : 'text-[#FF6B63]'
+  const label     = score >= 70 ? 'Accessible' : score >= 40 ? 'Limited' : score >= 20 ? 'Difficult' : 'Isolated'
   return (
     <div className="w-full">
       <div className="flex justify-between text-xs mb-1">
-        <span className="text-gray-400">Accessibility</span>
+        <span className="text-[#94A3B8] font-medium uppercase tracking-wider">Accessibility</span>
         <span className={`font-bold ${textColor}`}>{score?.toFixed(0)}/100 – {label}</span>
       </div>
-      <div className="h-2 bg-gray-800 rounded-full overflow-hidden">
-        <div className={`h-full rounded-full transition-all duration-700 ${color}`} style={{ width: `${score}%` }} />
+      <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(36,59,83,0.6)' }}>
+        <div className={`h-full rounded-full progress-bar ${barColor}`} style={{ width: `${score}%` }} />
       </div>
     </div>
   )
 }
 
 export function MetricCard({ title, value, sub, icon: Icon, accent = 'blue', alert = false }) {
+  // accent maps to PRAKRITI feature colors
   const accentMap = {
-    blue: 'border-blue-800/50 text-blue-400',
-    red: 'border-red-800/50 text-red-400',
-    orange: 'border-orange-800/50 text-orange-400',
-    green: 'border-green-800/50 text-green-400',
-    yellow: 'border-yellow-800/50 text-yellow-400',
-    purple: 'border-purple-800/50 text-purple-400',
-    gray: 'border-gray-700 text-gray-400',
+    blue:   { border: 'rgba(0,212,255,0.15)',    iconColor: '#00D4FF',  },
+    red:    { border: 'rgba(255,59,48,0.20)',     iconColor: '#FF6B63',  },
+    orange: { border: 'rgba(255,149,0,0.20)',     iconColor: '#FFB340',  },
+    green:  { border: 'rgba(48,209,88,0.18)',     iconColor: '#5EE47C',  },
+    yellow: { border: 'rgba(255,214,10,0.18)',    iconColor: '#FFE234',  },
+    purple: { border: 'rgba(168,85,247,0.18)',    iconColor: '#C084FC',  },
+    gray:   { border: 'rgba(100,116,139,0.25)',   iconColor: '#94A3B8',  },
   }
   const cls = accentMap[accent] || accentMap.blue
+  const borderStyle = alert ? 'rgba(255,59,48,0.25)' : cls.border
   return (
-    <div className={`bg-gray-900/60 border rounded-lg p-4 ${alert ? 'border-red-700/60 bg-red-900/10' : cls.split(' ')[0]}`}>
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-xs text-gray-500 uppercase tracking-wide">{title}</span>
-        {Icon && <Icon size={16} className={cls.split(' ')[1]} />}
+    <div
+      className="rounded-xl p-4 shadow-panel transition-all duration-200 hover:shadow-panel-lg"
+      style={{
+        background: 'rgba(18,38,58,0.80)',
+        backdropFilter: 'blur(12px)',
+        border: `1px solid ${borderStyle}`,
+        ...(alert ? { background: 'rgba(255,59,48,0.06)' } : {}),
+      }}
+    >
+      <div className="flex items-center justify-between mb-3">
+        <span className="text-xs font-medium uppercase tracking-wider" style={{ color: '#94A3B8' }}>{title}</span>
+        {Icon && <Icon size={15} style={{ color: cls.iconColor }} />}
       </div>
-      <div className={`text-2xl font-bold ${cls.split(' ')[1]}`}>{value ?? '—'}</div>
-      {sub && <div className="text-xs text-gray-500 mt-1">{sub}</div>}
+      <div className="text-3xl font-bold tracking-tight text-white">{value ?? '—'}</div>
+      {sub && <div className="text-xs mt-1.5" style={{ color: '#94A3B8' }}>{sub}</div>}
     </div>
   )
 }
 
 export function LoadingSpinner({ text = 'Loading...' }) {
   return (
-    <div className="flex items-center justify-center h-32 text-gray-500">
+    <div className="flex items-center justify-center h-32">
       <div className="flex flex-col items-center gap-2">
-        <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
-        <span className="text-sm">{text}</span>
+        {/* spinner uses PRAKRITI cyan accent */}
+        <div
+          className="w-5 h-5 border-2 border-t-transparent rounded-full animate-spin"
+          style={{ borderColor: '#00D4FF', borderTopColor: 'transparent' }}
+        />
+        <span className="text-xs font-medium" style={{ color: '#94A3B8' }}>{text}</span>
       </div>
     </div>
   )
@@ -113,15 +129,25 @@ export function LoadingSpinner({ text = 'Loading...' }) {
 export function ErrorBanner({ error }) {
   if (!error) return null
   return (
-    <div className="bg-red-900/30 border border-red-700/50 text-red-300 rounded-lg p-3 text-sm">
-      ⚠ {error}
+    <div
+      className="alert-toast animate-fade-in"
+      style={{ background: 'rgba(255,59,48,0.10)', borderColor: 'rgba(255,59,48,0.25)', color: '#FF6B63' }}
+    >
+      <AlertCircle size={16} className="flex-shrink-0 mt-0.5" style={{ color: '#FF6B63' }} />
+      <div className="flex-1 min-w-0">
+        <div className="font-semibold text-sm" style={{ color: '#FFA09A' }}>System Error</div>
+        <div className="text-xs mt-0.5 opacity-80">{error}</div>
+      </div>
     </div>
   )
 }
 
 export function DemoBadge() {
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] rounded bg-amber-900/40 border border-amber-700/40 text-amber-400">
+    <span
+      className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[10px] rounded-full font-medium tracking-wide"
+      style={{ background: 'rgba(255,159,10,0.12)', border: '1px solid rgba(255,159,10,0.25)', color: '#FF9F0A' }}
+    >
       DEMO DATA
     </span>
   )
@@ -129,10 +155,10 @@ export function DemoBadge() {
 
 export function SectionHeader({ title, sub, children }) {
   return (
-    <div className="flex items-center justify-between mb-4">
+    <div className="flex items-center justify-between mb-4 pb-3" style={{ borderBottom: '1px solid rgba(36,59,83,0.8)' }}>
       <div>
-        <h2 className="text-base font-semibold text-gray-100">{title}</h2>
-        {sub && <p className="text-xs text-gray-500 mt-0.5">{sub}</p>}
+        <h2 className="text-sm font-semibold text-white tracking-tight">{title}</h2>
+        {sub && <p className="text-xs mt-0.5" style={{ color: '#94A3B8' }}>{sub}</p>}
       </div>
       {children}
     </div>

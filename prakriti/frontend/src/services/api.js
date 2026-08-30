@@ -51,4 +51,15 @@ export const startSimulation = () => api.post('/simulation/start')
 export const getSimulationStatus = () => api.get('/simulation/status')
 export const resetSimulation = () => api.post('/simulation/reset')
 
+// Human-in-the-Loop (HITL)
+export const generateHITLRecommendations = () => api.post('/hitl/generate')
+export const getHITLRecommendations = (status) =>
+  api.get(status ? `/hitl/recommendations?status=${status}` : '/hitl/recommendations')
+export const approveHITL = (id, officerName, note) =>
+  api.post(`/hitl/${id}/approve`, { officer_name: officerName, note })
+export const rejectHITL = (id, officerName, note) =>
+  api.post(`/hitl/${id}/reject`, { officer_name: officerName, note })
+export const reassessHITL = (id) => api.post(`/hitl/${id}/reassess`)
+export const getHITLAudit = () => api.get('/hitl/audit')
+
 export default api

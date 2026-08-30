@@ -36,32 +36,35 @@ export default function Dashboard() {
   )
 
   return (
-    <div className="h-full overflow-y-auto bg-[#0a0e1a] p-4 space-y-4">
+    <div className="h-full overflow-y-auto bg-[#07111F] p-4 space-y-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-bold text-white">District Emergency Operations Center</h1>
+          <h1 className="text-lg font-bold text-white tracking-tight">District Emergency Operations Center</h1>
           <div className="flex items-center gap-2 mt-1">
             <DemoBadge />
-            <span className="text-xs text-gray-500">{summary?.scenario}</span>
+            <span className="text-xs" style={{ color: '#94A3B8' }}>{summary?.scenario}</span>
           </div>
         </div>
-        <div className="text-xs text-gray-600">Last updated: {summary?.last_updated ? new Date(summary.last_updated).toLocaleTimeString() : '—'}</div>
+        <div className="text-xs tabular-nums" style={{ color: '#4A5568' }}>Last updated: {summary?.last_updated ? new Date(summary.last_updated).toLocaleTimeString() : '—'}</div>
       </div>
 
       {sErr && <ErrorBanner error={sErr} />}
 
       {/* Critical alerts banner */}
       {alerts?.filter(a => a.severity === 'critical').length > 0 && (
-        <div className="bg-red-900/20 border border-red-700/50 rounded-lg p-3">
-          <div className="flex items-center gap-2 text-red-400 font-semibold text-sm mb-2">
-            <span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+        <div
+          className="rounded-xl p-3.5"
+          style={{ background: 'rgba(255,59,48,0.08)', border: '1px solid rgba(255,59,48,0.20)' }}
+        >
+          <div className="flex items-center gap-2 font-semibold text-sm mb-2" style={{ color: '#FF6B63' }}>
+            <span className="w-2 h-2 rounded-full animate-pulse" style={{ background: '#FF3B30' }} />
             🚨 ACTIVE CRITICAL ALERTS ({alerts.filter(a => a.severity === 'critical').length})
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             {alerts.filter(a => a.severity === 'critical').slice(0, 4).map((a, i) => (
-              <div key={i} className="text-xs text-red-300 flex items-start gap-2">
-                <span>•</span> {a.message}
+              <div key={i} className="text-xs flex items-start gap-2" style={{ color: 'rgba(255,107,99,0.85)' }}>
+                <span style={{ color: '#FF3B30', marginTop: 2 }}>•</span> {a.message}
               </div>
             ))}
           </div>
@@ -94,29 +97,39 @@ export default function Dashboard() {
       {/* Contradiction + Blackout alerts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
         {(summary?.contradictions_detected || 0) > 0 && (
-          <div className="bg-yellow-900/20 border border-yellow-700/40 rounded-lg p-3">
+          <div
+            className="rounded-xl p-3.5 transition-all duration-200"
+            style={{ background: 'rgba(255,159,10,0.08)', border: '1px solid rgba(255,159,10,0.20)' }}
+          >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-yellow-400">
+              <div className="flex items-center gap-2" style={{ color: '#FF9F0A' }}>
                 <AlertTriangle size={14} />
                 <span className="text-sm font-semibold">⚠ {summary.contradictions_detected} Contradictions Detected</span>
               </div>
-              <button onClick={() => navigate('/contradictions')} className="text-xs text-yellow-300 hover:underline">View →</button>
+              <button
+                onClick={() => navigate('/contradictions')}
+                className="text-xs transition-colors"
+                style={{ color: '#FF9F0A' }}
+              >View →</button>
             </div>
-            <p className="text-xs text-yellow-600 mt-1">Conflicting reports require resolution to improve confidence scores.</p>
+            <p className="text-xs mt-1.5" style={{ color: 'rgba(255,159,10,0.70)' }}>Conflicting reports require resolution to improve confidence scores.</p>
           </div>
         )}
         {blackoutVillages.length > 0 && (
-          <div className="bg-red-900/20 border border-red-700/40 rounded-lg p-3">
+          <div
+            className="rounded-xl p-3.5 transition-all duration-200"
+            style={{ background: 'rgba(255,59,48,0.08)', border: '1px solid rgba(255,59,48,0.20)' }}
+          >
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-red-400">
+              <div className="flex items-center gap-2" style={{ color: '#FF6B63' }}>
                 <Radio size={14} />
                 <span className="text-sm font-semibold">⚠ {blackoutVillages.length} Communication Blackout(s)</span>
               </div>
             </div>
-            <p className="text-xs text-red-600 mt-1">
+            <p className="text-xs mt-1.5" style={{ color: 'rgba(255,107,99,0.75)' }}>
               {blackoutVillages.map(v => v.name).join(', ')} — no recent contact.
             </p>
-            <p className="text-xs text-red-500 mt-0.5">Absence of reports ≠ safety. Satellite verification recommended.</p>
+            <p className="text-xs mt-0.5" style={{ color: 'rgba(255,107,99,0.55)' }}>Absence of reports ≠ safety. Satellite verification recommended.</p>
           </div>
         )}
       </div>
@@ -124,17 +137,30 @@ export default function Dashboard() {
       {/* Main content grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Priority Village List */}
-        <div className="lg:col-span-2 bg-gray-900/60 border border-gray-800 rounded-lg p-4">
+        <div
+          className="lg:col-span-2 rounded-xl p-4 shadow-panel"
+          style={{ background: 'rgba(18,38,58,0.85)', backdropFilter: 'blur(12px)', border: '1px solid #243B53' }}
+        >
           <SectionHeader title="Priority Rescue Ranking" sub="Villages ranked by AI Rescue Priority Score">
-            <button onClick={() => navigate('/map')} className="text-xs text-blue-400 hover:underline flex items-center gap-1">
+            <button
+              onClick={() => navigate('/map')}
+              className="text-xs flex items-center gap-1 transition-colors"
+              style={{ color: '#00D4FF' }}
+            >
               <Map size={12} /> View on Map
             </button>
           </SectionHeader>
           {vLoading ? <LoadingSpinner /> : (
             <div className="space-y-2">
               {criticalVillages.map((v, idx) => (
-                <div key={v.id} className="flex items-center gap-3 p-3 bg-gray-950/50 rounded-lg border border-gray-800 hover:border-gray-600 transition-colors">
-                  <div className={`text-lg font-bold w-8 flex-shrink-0 ${idx === 0 ? 'text-red-400' : idx === 1 ? 'text-orange-400' : 'text-yellow-400'}`}>
+                <div
+                  key={v.id}
+                  className="flex items-center gap-3 p-3 rounded-xl transition-all duration-200 cursor-default"
+                  style={{ background: '#12263A', border: '1px solid rgba(36,59,83,0.8)' }}
+                  onMouseEnter={e => e.currentTarget.style.background = '#172F46'}
+                  onMouseLeave={e => e.currentTarget.style.background = '#12263A'}
+                >
+                  <div className={`text-lg font-bold w-8 flex-shrink-0`} style={{ color: idx === 0 ? '#FF3B30' : idx === 1 ? '#FF9500' : '#FFD60A' }}>
                     #{idx + 1}
                   </div>
                   <div className="flex-1 min-w-0">
@@ -143,25 +169,31 @@ export default function Dashboard() {
                       <SeverityBadge severity={v.severity} />
                       <PriorityBadge pclass={v.rescue_priority_class} />
                     </div>
-                    <div className="text-xs text-gray-500 mt-0.5">
+                    <div className="text-xs mt-0.5" style={{ color: '#94A3B8' }}>
                       {v.block} · {v.people_at_risk?.toLocaleString()} at risk · {(v.disaster_types || []).join(', ')}
-                      {!v.road_accessible && <span className="ml-2 text-red-400">🚫 Road blocked</span>}
-                      {!v.has_communication && <span className="ml-2 text-red-400">📡 No comms</span>}
+                      {!v.road_accessible && <span className="ml-2" style={{ color: '#FF6B63' }}>🚫 Road blocked</span>}
+                      {!v.has_communication && <span className="ml-2" style={{ color: '#FF6B63' }}>📡 No comms</span>}
                     </div>
                   </div>
                   <div className="text-right flex-shrink-0">
                     <div className="text-lg font-bold text-white">{v.rescue_priority_score?.toFixed(0)}</div>
-                    <div className="text-[10px] text-gray-500">Priority Score</div>
+                    <div className="text-[10px]" style={{ color: '#94A3B8' }}>Priority Score</div>
                   </div>
                   <div className="w-24">
-                    <div className="text-[10px] text-gray-500 mb-1">Info Fog</div>
-                    <div className="h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                    <div className="text-[10px] mb-1" style={{ color: '#94A3B8' }}>Info Fog</div>
+                    <div className="h-1.5 rounded-full overflow-hidden" style={{ background: 'rgba(36,59,83,0.6)' }}>
                       <div
-                        className={`h-full rounded-full ${v.information_fog_score > 70 ? 'bg-red-500' : v.information_fog_score > 50 ? 'bg-orange-500' : 'bg-yellow-500'}`}
-                        style={{ width: `${v.information_fog_score}%` }}
+                        className="h-full rounded-full fog-bar"
+                        style={{
+                          width: `${v.information_fog_score}%`,
+                          background: v.information_fog_score > 70 ? '#A855F7' : v.information_fog_score > 50 ? '#FF9F0A' : '#FFD60A',
+                        }}
                       />
                     </div>
-                    <div className={`text-[10px] mt-0.5 ${v.information_fog_score > 70 ? 'text-red-400' : v.information_fog_score > 50 ? 'text-orange-400' : 'text-yellow-400'}`}>
+                    <div
+                      className="text-[10px] mt-0.5"
+                      style={{ color: v.information_fog_score > 70 ? '#C084FC' : v.information_fog_score > 50 ? '#FFB340' : '#FFE234' }}
+                    >
                       {v.information_fog_score?.toFixed(0)}%
                     </div>
                   </div>
@@ -172,9 +204,16 @@ export default function Dashboard() {
         </div>
 
         {/* Activity Feed */}
-        <div className="bg-gray-900/60 border border-gray-800 rounded-lg p-4">
+        <div
+          className="rounded-xl p-4 shadow-panel"
+          style={{ background: 'rgba(18,38,58,0.85)', backdropFilter: 'blur(12px)', border: '1px solid #243B53' }}
+        >
           <SectionHeader title="Live Activity Feed" sub="Real-time EOC updates">
-            <button onClick={refetchActivity} className="text-xs text-gray-500 hover:text-gray-300">↻ Refresh</button>
+            <button
+              onClick={refetchActivity}
+              className="text-xs transition-colors"
+              style={{ color: '#94A3B8' }}
+            >↻ Refresh</button>
           </SectionHeader>
           <ActivityFeed logs={activity || []} maxHeight="480px" />
         </div>
@@ -182,24 +221,31 @@ export default function Dashboard() {
 
       {/* Silence is a Signal section */}
       {blackoutVillages.length > 0 && (
-        <div className="bg-gray-900/60 border border-gray-800 rounded-lg p-4">
+        <div
+          className="rounded-xl p-4 shadow-panel"
+          style={{ background: 'rgba(18,38,58,0.85)', backdropFilter: 'blur(12px)', border: '1px solid #243B53' }}
+        >
           <div className="flex items-center gap-2 mb-3">
-            <Eye size={16} className="text-yellow-400" />
-            <h3 className="text-sm font-semibold text-yellow-400">⚠ SILENCE IS A SIGNAL — Information Blackout Zones</h3>
+            <Eye size={15} style={{ color: '#FFD60A' }} />
+            <h3 className="text-sm font-semibold" style={{ color: '#FFE234' }}>⚠ SILENCE IS A SIGNAL — Information Blackout Zones</h3>
           </div>
-          <p className="text-xs text-gray-500 mb-3">
-            The following villages have no recent communication. <strong className="text-yellow-400">Absence of reports does not indicate safety.</strong>
+          <p className="text-xs mb-3" style={{ color: '#94A3B8' }}>
+            The following villages have no recent communication. <strong style={{ color: '#FFE234' }}>Absence of reports does not indicate safety.</strong>
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
             {blackoutVillages.map(v => (
-              <div key={v.id} className="bg-red-900/20 border border-red-800/50 rounded-lg p-3">
+              <div
+                key={v.id}
+                className="rounded-xl p-3 transition-all duration-200"
+                style={{ background: 'rgba(255,59,48,0.08)', border: '1px solid rgba(255,59,48,0.20)' }}
+              >
                 <div className="font-semibold text-sm text-white">{v.name}</div>
-                <div className="text-xs text-gray-500">{v.block} Block</div>
-                <div className="text-xs text-red-400 mt-1">📡 No recent reports</div>
-                <div className="text-xs text-gray-500 mt-1">
+                <div className="text-xs" style={{ color: '#94A3B8' }}>{v.block} Block</div>
+                <div className="text-xs mt-1.5" style={{ color: '#FF6B63' }}>📡 No recent reports</div>
+                <div className="text-xs mt-1" style={{ color: '#94A3B8' }}>
                   Last contact: {v.last_report_time ? timeAgo(v.last_report_time) : 'Unknown'}
                 </div>
-                <div className="text-xs text-yellow-500 mt-2">
+                <div className="text-xs mt-2" style={{ color: 'rgba(255,214,10,0.75)' }}>
                   Recommended: Satellite / drone verification
                 </div>
               </div>

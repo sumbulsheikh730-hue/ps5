@@ -1,82 +1,151 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* ── PRAKRITI Design Tokens ───────────────────────────── */
 :root {
-  --bg: #0a0e1a;
-  --surface: #111827;
-  --border: #1f2937;
-  --card: #141c2e;
-  --text: #e2e8f0;
-  --muted: #6b7280;
-  --accent: #3b82f6;
+  --bg:           #07111F;   /* deep navy – main bg          */
+  --surface:      #0D1B2A;   /* navy slate – secondary bg    */
+  --card:         #12263A;   /* dark blue – card/panel       */
+  --elevated:     #172F46;   /* elevated card                */
+  --border:       #243B53;   /* blue-gray border             */
+  --text:         #F1F5F9;   /* almost white                 */
+  --muted:        #94A3B8;   /* slate                        */
+  --accent:       #00D4FF;   /* cyan – primary accent        */
+  --accent2:      #00BFA6;   /* teal – secondary accent      */
+
+  /* severity */
+  --critical:     #FF3B30;
+  --high:         #FF9500;
+  --moderate:     #FFD60A;
+  --low:          #30D158;
+
+  /* feature colors */
+  --fog:          #A855F7;   /* information fog – purple     */
+  --ai:           #8B5CF6;   /* AI / intelligence – violet   */
+  --contradiction:#FF375F;   /* contradiction – red/pink     */
+  --comms:        #FF9F0A;   /* comms gap – amber            */
+  --verified:     #00BFA6;   /* verified – teal              */
 }
 
 body {
   background-color: var(--bg);
   color: var(--text);
-  font-family: -apple-system, 'Segoe UI', system-ui, sans-serif;
+  font-family: 'Inter', -apple-system, 'Segoe UI', system-ui, sans-serif;
   font-size: 14px;
   line-height: 1.6;
   margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Leaflet overrides for dark theme */
+/* ── Leaflet map overrides ────────────────────────────── */
 .leaflet-container {
-  background: #0d1526 !important;
+  background: #07111F !important;
   font-family: inherit;
 }
-
 .leaflet-popup-content-wrapper {
-  background: #141c2e;
-  color: #e2e8f0;
-  border: 1px solid #1f2937;
-  border-radius: 8px;
+  background: #12263A;
+  color: #F1F5F9;
+  border: 1px solid #243B53;
+  border-radius: 10px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
 }
+.leaflet-popup-tip          { background: #12263A; }
+.leaflet-popup-close-button { color: #4A5568 !important; }
+.leaflet-tile-pane          { filter: brightness(0.6) contrast(1.1) saturate(0.7); }
 
-.leaflet-popup-tip {
-  background: #141c2e;
-}
+/* ── Scrollbars ───────────────────────────────────────── */
+::-webkit-scrollbar              { width: 4px; height: 4px; }
+::-webkit-scrollbar-track        { background: transparent; }
+::-webkit-scrollbar-thumb        { background: #243B53; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover  { background: #2E4D6B; }
 
-.leaflet-popup-close-button {
-  color: #6b7280 !important;
-}
+/* ── Severity pill badges ─────────────────────────────── */
+.badge-critical { background: rgba(255,59,48,0.12);  color: #FF6B63; border: 1px solid rgba(255,59,48,0.25);  border-radius: 9999px; }
+.badge-high     { background: rgba(255,149,0,0.12);  color: #FFB340; border: 1px solid rgba(255,149,0,0.25);  border-radius: 9999px; }
+.badge-moderate { background: rgba(255,214,10,0.12); color: #FFE234; border: 1px solid rgba(255,214,10,0.25); border-radius: 9999px; }
+.badge-low      { background: rgba(48,209,88,0.12);  color: #5EE47C; border: 1px solid rgba(48,209,88,0.25);  border-radius: 9999px; }
+.badge-unknown  { background: rgba(100,116,139,0.12);color: #94A3B8; border: 1px solid rgba(100,116,139,0.2); border-radius: 9999px; }
 
-.leaflet-tile-pane {
-  filter: brightness(0.7) contrast(1.1) saturate(0.8);
-}
-
-/* Scrollbars */
-::-webkit-scrollbar { width: 6px; height: 6px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: #2d3748; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #4a5568; }
-
-/* Severity badges */
-.badge-critical { @apply bg-red-900/60 text-red-300 border border-red-700/50; }
-.badge-high { @apply bg-orange-900/60 text-orange-300 border border-orange-700/50; }
-.badge-moderate { @apply bg-yellow-900/60 text-yellow-300 border border-yellow-700/50; }
-.badge-low { @apply bg-green-900/60 text-green-300 border border-green-700/50; }
-.badge-unknown { @apply bg-gray-800 text-gray-400 border border-gray-600; }
-
-/* Card hover */
+/* ── Enterprise panel card ────────────────────────────── */
 .eoc-card {
-  @apply bg-gray-900/80 border border-gray-800 rounded-lg;
-  transition: border-color 0.2s;
+  background: rgba(18,38,58,0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid #243B53;
+  border-radius: 12px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.45);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 .eoc-card:hover {
-  @apply border-gray-600;
+  border-color: #2E4D6B;
+  box-shadow: 0 8px 48px rgba(0,0,0,0.55);
 }
 
-/* Priority dot animation */
+/* ── Critical pulse animation ─────────────────────────── */
 .priority-critical { animation: criticalPulse 2s infinite; }
 @keyframes criticalPulse {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0.7); }
-  50% { box-shadow: 0 0 0 8px rgba(239,68,68,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255,59,48,0.5); }
+  50%       { box-shadow: 0 0 0 6px rgba(255,59,48,0); }
 }
 
-.fog-bar {
-  transition: width 0.8s ease-in-out;
+/* ── Progress & fog bars ──────────────────────────────── */
+.fog-bar      { transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+.progress-bar { transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1); }
+
+/* ── Active sidebar nav accent line ──────────────────── */
+.nav-active-accent {
+  box-shadow: inset 3px 0 0 #00D4FF;
+}
+
+/* ── Input fields ─────────────────────────────────────── */
+.input-base {
+  width: 100%;
+  background: #12263A;
+  border: 1px solid #243B53;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #F1F5F9;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.input-base::placeholder { color: #4A5C70; }
+.input-base:focus {
+  outline: none;
+  border-color: rgba(0,212,255,0.5);
+  box-shadow: 0 0 0 3px rgba(0,212,255,0.10);
+}
+
+/* ── Alert / toast strip ──────────────────────────────── */
+.alert-toast {
+  border-radius: 12px;
+  border-width: 1px;
+  padding: 12px 16px;
+  font-size: 14px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+/* ── Table / list row hover ───────────────────────────── */
+.data-row {
+  border-bottom: 1px solid rgba(36,59,83,0.6);
+  transition: all 0.2s ease;
+}
+.data-row:hover {
+  background: rgba(23,47,70,0.4);
+}
+
+/* ── Fade-in animation ────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0);   }
+}
+.animate-fade-in { animation: fadeIn 0.2s ease; }
+
+/* ── Cyan glow for primary accent elements ────────────── */
+.glow-cyan {
+  box-shadow: 0 0 12px rgba(0,212,255,0.25), 0 0 24px rgba(0,212,255,0.10);
 }

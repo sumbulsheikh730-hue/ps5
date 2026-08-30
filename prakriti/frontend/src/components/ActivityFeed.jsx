@@ -3,16 +3,16 @@ import { timeAgo, formatDateTime } from '../utils/helpers.js'
 import { Activity, Radio, Satellite, AlertTriangle, Truck, MapPin, Shield, Zap } from 'lucide-react'
 
 const EVENT_CONFIG = {
-  report: { icon: Radio, color: 'text-blue-400', bgColor: 'bg-blue-900/30 border-blue-800/50' },
-  contradiction: { icon: AlertTriangle, color: 'text-yellow-400', bgColor: 'bg-yellow-900/30 border-yellow-800/50' },
-  satellite: { icon: Satellite, color: 'text-cyan-400', bgColor: 'bg-cyan-900/30 border-cyan-800/50' },
-  deployment: { icon: Truck, color: 'text-green-400', bgColor: 'bg-green-900/30 border-green-800/50' },
-  route: { icon: MapPin, color: 'text-orange-400', bgColor: 'bg-orange-900/30 border-orange-800/50' },
-  ai: { icon: Zap, color: 'text-purple-400', bgColor: 'bg-purple-900/30 border-purple-800/50' },
-  blackout: { icon: Shield, color: 'text-red-400', bgColor: 'bg-red-900/30 border-red-800/50' },
-  medical: { icon: Activity, color: 'text-red-400', bgColor: 'bg-red-900/30 border-red-800/50' },
-  simulation: { icon: Zap, color: 'text-green-400', bgColor: 'bg-green-900/30 border-green-800/50' },
-  system: { icon: Shield, color: 'text-gray-400', bgColor: 'bg-gray-800/50 border-gray-700/50' },
+  report:        { icon: Radio,          color: 'text-blue-400',    bgColor: 'bg-blue-500/8   border-blue-500/15' },
+  contradiction: { icon: AlertTriangle,  color: 'text-amber-400',   bgColor: 'bg-amber-500/8  border-amber-500/15' },
+  satellite:     { icon: Satellite,      color: 'text-cyan-400',    bgColor: 'bg-cyan-500/8   border-cyan-500/15' },
+  deployment:    { icon: Truck,          color: 'text-emerald-400', bgColor: 'bg-emerald-500/8 border-emerald-500/15' },
+  route:         { icon: MapPin,         color: 'text-orange-400',  bgColor: 'bg-orange-500/8 border-orange-500/15' },
+  ai:            { icon: Zap,            color: 'text-purple-400',  bgColor: 'bg-purple-500/8 border-purple-500/15' },
+  blackout:      { icon: Shield,         color: 'text-red-400',     bgColor: 'bg-red-500/8    border-red-500/15' },
+  medical:       { icon: Activity,       color: 'text-red-400',     bgColor: 'bg-red-500/8    border-red-500/15' },
+  simulation:    { icon: Zap,            color: 'text-emerald-400', bgColor: 'bg-emerald-500/8 border-emerald-500/15' },
+  system:        { icon: Shield,         color: 'text-slate-400',   bgColor: 'bg-slate-800/20 border-slate-700/20' },
 }
 
 const SEVERITY_DOT = {
@@ -30,7 +30,7 @@ export default function ActivityFeed({ logs = [], maxHeight = '420px' }) {
   }, [logs.length])
 
   if (!logs.length) {
-    return <div className="text-sm text-gray-500 p-4 text-center">No activity yet</div>
+    return <div className="text-sm text-slate-500 p-4 text-center font-medium">No activity yet</div>
   }
 
   return (
@@ -38,25 +38,25 @@ export default function ActivityFeed({ logs = [], maxHeight = '420px' }) {
       {logs.map((log, idx) => {
         const cfg = EVENT_CONFIG[log.event_type] || EVENT_CONFIG.system
         const Icon = cfg.icon
-        const dotCls = SEVERITY_DOT[log.severity] || 'bg-gray-500'
+        const dotCls = SEVERITY_DOT[log.severity] || 'bg-slate-500'
 
         return (
           <div
             key={log.id || idx}
-            className={`flex gap-3 p-2.5 rounded-lg border text-xs ${cfg.bgColor}`}
+            className={`flex gap-2.5 p-2.5 rounded-xl border text-xs transition-all duration-200 hover:bg-slate-800/20 ${cfg.bgColor}`}
           >
             <div className="flex-shrink-0 mt-0.5">
-              <Icon size={13} className={cfg.color} />
+              <Icon size={12} className={cfg.color} />
             </div>
             <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2 mb-0.5">
+              <div className="flex items-center gap-1.5 mb-0.5">
                 <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${dotCls}`} />
-                <span className="font-medium text-gray-200 truncate">{log.title}</span>
+                <span className="font-semibold text-slate-200 truncate">{log.title}</span>
               </div>
               {log.body && (
-                <p className="text-gray-500 leading-relaxed line-clamp-2">{log.body}</p>
+                <p className="text-slate-500 leading-relaxed line-clamp-2 text-[11px]">{log.body}</p>
               )}
-              <div className="text-gray-600 mt-1">{timeAgo(log.timestamp)}</div>
+              <div className="text-slate-600 mt-1 text-[10px]">{timeAgo(log.timestamp)}</div>
             </div>
           </div>
         )
